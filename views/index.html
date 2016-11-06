@@ -1,90 +1,268 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Favorites Organizer powered by Cloudant</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="stylesheet" href="/style/style.css" />
-    <script id="data" type="application/json">
-        <%- JSON.stringify(data) %>
-    </script>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="initial-scale=1,width=device-width" />
+  <title>Team Utilization </title>
+  <link rel="stylesheet" type="text/css" href="/style/style.css"/>
+  <script id="db_data" type="application/json">
+    <%- JSON.stringify(data) %>
+  </script>
 </head>
 
-<body>
-    <div class="leftHalf">
-        <img class="newappIcon" src="images/newapp-icon.png">
-        <h1>
-            Welcome to the <span class="blue">Favorites Organizer powered by Cloudant</span>
-        </h1>
+<body class="wf2-skin-nx wf2-skin-nxt wf2-skin-nxs">
+  <div id="app-nav"></div>
+  <div id="header"></div>
+  <div class="wf2-app-nav-dec-wrp" id="appContainer">
+  </div>
+  <div id="wf2-footer"></div>
+  <div id="login-panel" class="wf2-panel-loading">
+    <div class="yui3-widget-hd ">
+      <h1>Utilization report</h1>
     </div>
-    <div class="rightHalf">
-        <header>
-            <div class='title'>Favorites Organizer
-                <button class='' onclick="toggleAppInfo()" title='Application Information'>
-                    <img height="15px" width="15px" src='images/info.png' alt='detail' />
-                </button>
+    <div class="yui3-widget-bd">
+      <form id="cred" action="#">
+        <fieldset>
+          <legend>Login </legend>
+          <div class="fields">
+            <div id="fieldPP" class="wf2-field">
+              <div class="wf2-field-body">
+                <div class="wf2-field-state">
+                  <select id="value" name="value" class="wf2-field-control"></select>
+                </div>
+              </div>
             </div>
-        </header>
-        <section id='appinfo' style='display: none;'>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>This application helps you organize your favorite files.</td>
-                    </tr>
-                    <tr>
-                        <td>Supports all file types, like Audio, Video, Photos, Text etc.</td>
-                    </tr>
-                    <tr>
-                        <td>Click on <img src='images/add.png' alt='add' /> icon to create a new category for your files. Provide a title and description for the category in the text fields.</td>
-                    </tr>
-                    <tr>
-                        <td>To add a file to a given category, Click on 'Browse' button to select a file, and 'Upload' button to upload the file.</td>
-                    </tr>
-                    <tr>
-                        <td>To modify a title or description, Edit the text and press Enter.</td>
-                    </tr>
-                    <tr>
-                        <td>You can add multiple files (of any type) to a category.</td>
-                    </tr>
-                    <tr>
-                        <td>Click on <span class='deleteBtn' alt='delete'></span> icon to delete the category.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        <section>
-            <table id='notes' class='records' border='0' cellspacing='0' cellpadding='0'>
-                <tbody></tbody>
-            </table>
-        </section>
-        <footer>
-            <div class='tips'>Click the Add button to add a new category.
-                <!-- <button class='detailBtn' onclick="toggleServiceInfo()" title='Service information'>
-                <img src='images/detail.png' alt='detail'/>
-            -->
-                <button class="addBtn" onclick="addItem()" title="add record">
-                    <img src="images/add.png" alt="add">
-                </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  <script id="createTeam-template" type="text/x-handlebars-template">
+        <div id="tabView">
+            <div class="wf2-extended-tabview-nav-wrap">
+                <div class="wf2-extended-tabview-nav">
+                    <ul>
+                        <li><a href="#createTeam">Create Team</a></li>
+                        <li><a href="#createTasks">Create Tasks</a></li>
+                    </ul>
+                </div>
             </div>
-            <div id="loadingImage"></div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <div id="errorDiv" class='errorMsg'></div>
-        </footer>
-        <script type="text/javascript" src="/scripts/util.js"></script>
-        <script type="text/javascript" src="/scripts/index.js"></script>
-        <div id="myImage">
-            <div id="innerImg"></div>
+            <div class="yui3-tabview-panel">
+                <div id="createTeam">
+                    <div id="createTeamFormField" class="yui3-wf2-field">
+                        <div class="wf2-field-body">
+                            <div class="wf2-field-state">
+                                <form name="createTeamForm" class="wf2-field-control myForm tableLayout">
+                                    <div id="lanIdField">
+                                        <label for="lanId">Lan ID</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <input class="wf2-field-control" type="text" name="lanId" id="lanId" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="empIdField">
+                                        <label for="empId">Employee ID</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <input class="wf2-field-control" type="text" name="empId" id="empId" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="empNameField">
+                                        <label for="empName">Name</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <input class="wf2-field-control" type="text" name="empName" id="empName" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="empEmailField">
+                                        <label for="empEmail">Email</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <input class="wf2-field-control" type="text" name="empEmail" id="empEmail" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="isAdminFieldGroup">
+                                        <label>Is Admin</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <div class="wf2-field-control">
+                                                    <div class="wf2-checkbox wf2-checkbox-label-right">
+                                                        <input type="checkbox" name="isAdmin" value="yes" id="isAdmin" class="wf2-checkbox-control" />
+                                                        <label for="noTeamLimit" class="wf2-checkbox-label">
+                                                            <span class="wf2-checkbox-label-text">&nbsp;</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="addTeam" class="wf2-button wf2-button-primary">Button</button>
+                    <div class="render-table" id="createTeamTable"></div>
+                </div>
+                <div id="createTasks">
+                    <div id="createTaskFormField" class="yui3-wf2-field">
+                        <div class="wf2-field-body">
+                            <div class="wf2-field-state">
+                                <form name="createTaskForm" class="wf2-field-control tableLayout">
+                                    <div id="taskField">
+                                        <label for="task">Task Name</label>
+                                        <div class="wf2-field-body">
+                                            <div class="wf2-field-state">
+                                                <input class="wf2-field-control" type="text" name="task" id="task" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="addTask" class="wf2-button wf2-button-primary">Add Tasks</button>
+                    <div class="render-table" id="createTaskTable"></div>
+                </div>
+            </div>
         </div>
-        <br>
-        <br>
-        <br>
-    </div>
+    </script>
+  <script src="https://wellscontent.wellsfargo.com/wria/2.12.0/build/wf2/wf2.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script src="https://highcharts.github.io/pattern-fill/pattern-fill-v2.js"></script>
+  
+  <script src="scripts/pto.js"></script>
+  <script src="scripts/reports.js"></script>
+  <script src="scripts/tasks.js"></script>
+  <script src="scripts/manageTasks/taskManagerView.js"></script>
+  <script src="scripts/manageTasks/tasksList.js"></script>
+  <script src="scripts/manageTasks/taskDetails.js"></script>
+  <script src="scripts/register.js"></script>
+  <script>
+  YUI({
+    filter: 'raw',
+    combine: false
+  }).use('app-transitions', 'view', 'wf2-app-nav', 'wf2-global-header',
+    'ptoModule', 'reportModule', 'taskModule', 'registerModule', 'router',
+    'wf2-extended-tabview', 'wf2-table', 'wf2-form',
+    'wf2-footer',
+    function(Y) {
+
+      var app = new Y.App({
+        transitions: true,
+        container: Y.one('#appContainer'),
+        views: {
+          utilizationView: {
+            type: Y.UtilApp.reportsPage,
+            preserve: true
+          },
+          ptoView: {
+            type: Y.UtilApp.ptoPage,
+            preserve: true
+          },
+          taskView: {
+            type: Y.UtilApp.taskPage,
+            preserve: true
+          },
+          regView: {
+            type: Y.UtilApp.regisPage,
+            preserve: true
+          }
+        }
+      });
+      var router = new Y.Router({
+        html5: false
+      });
+      
+      router.route('/reg', function() {
+        app.showView('regView')
+      });
+      router.route('/utilis', function() {
+        app.showView('utilizationView');
+      });
+      router.route('/pto', function() {
+        app.showView('ptoView');
+      });
+      router.route('/tasks', function() {
+        app.showView('taskView');
+      });
+
+      var appnav = new Y.WF2.AppNav({
+        label: 'Sample',
+        zIndex: 1,
+        itemsData: {
+          nodes: [{
+            label: 'Utilization',
+            data: {
+              href: "#/utilis"
+            },
+            state: {
+              selected: true
+            }
+          }, {
+            label: 'Add Task',
+            data: {
+              href: "#/tasks"
+            }
+          }, {
+            label: 'PTO',
+            data: {
+              href: "#/pto"
+            }
+          }, {
+            label: 'Create Team',
+            data: {
+              href: "#/reg"
+            }
+          }]
+        }
+      });
+
+      appnav.render("#app-nav");
+      config = {
+        links: [{
+            href: 'http://www.google.com',
+            label: 'Google',
+            windowWidth: 200,
+            windowHeight: 300
+          }, {
+            href: 'http://www.yahoo.com',
+            label: 'Yahoo'
+          }, {
+            href: 'http://www.apple.com',
+            label: 'Apple'
+          }, {
+            href: 'http://www.apple.com',
+            label: 'Apple',
+            target: '_self'
+          } // will not open a child window
+        ]
+      };
+      gh = Y.WF2.GlobalHeader.getGlobalHeader({
+        appname: 'Utilization Report',
+        appid: 'util',
+        support: false,
+        logo: false,
+        signOff: true,
+        type: 'help-child'
+      }).render();
+
+      appFooter = new Y.WF2.Footer(config);
+      appFooter.render('#wf2-footer');
+      
+      app.render().dispatch();
+      app.showView('utilizationView');
+
+    });
+  </script>
 </body>
 
 </html>

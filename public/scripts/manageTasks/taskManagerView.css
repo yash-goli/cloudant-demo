@@ -1,0 +1,10 @@
+.taskDetailHeaderContainer, .taskDetailContainer{
+	display: table-row;
+}
+.taskDetailHeaderContainer span{
+	font-weight: bold;
+}
+.taskContainer, .hoursContainer, .removeButtonContainer{
+	display: table-cell;
+	padding: 0 10px;
+}
